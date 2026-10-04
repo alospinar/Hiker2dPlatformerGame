@@ -2,8 +2,9 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -11,15 +12,15 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Climbing
+  - Player
+  - Background
+  - Bouncing
+  - Enemies
+  - Hazards
+  - Bullets
+  - Interactables
   - 
   - 
   - 
@@ -41,3 +42,29 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 980412347
+    locked: 0
+  - name: Water
+    uniqueID: 3201084265
+    locked: 0
+  - name: Platforms
+    uniqueID: 1294466191
+    locked: 0
+  - name: Climbing
+    uniqueID: 2644230529
+    locked: 0
+  - name: Hazards
+    uniqueID: 360003739
+    locked: 0
+  - name: Enemy
+    uniqueID: 3506852895
+    locked: 0
+  - name: Interactables
+    uniqueID: 347928451
+    locked: 0
+  - name: Player
+    uniqueID: 2678738253
+    locked: 0
+  m_RenderingLayers:
+  - Default

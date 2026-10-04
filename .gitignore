@@ -23,6 +23,11 @@
 /[Uu]ser[Ss]ettings/
 *.log
 
+# Operating system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
 *.blend1.meta
@@ -33,6 +38,8 @@
 
 # Recordings can get excessive in size
 /[Rr]ecordings/
+!/Recordings/
+!/Recordings/playtest.mp4
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
