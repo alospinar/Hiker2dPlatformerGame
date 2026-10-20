@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpSpeed = 2f;
     [SerializeField] float climbSpeed = 5f;
     [SerializeField] Vector2 deathKick = new Vector2 (10f,20f);
+    [SerializeField] float deathDelay = 2f;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform gun;
     
@@ -15,23 +17,11 @@ public class PlayerMovement : MonoBehaviour
     Animator myAnimator;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
-    PlayerInput playerInput;
-    InputAction moveAction;
-    InputAction jumpAction;
-    InputAction attackAction;
 
     bool isAlive = true; 
     
     float gravityScaleAtStart;
-
-    void Awake()
-    {
-        playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions.FindAction("Player/Move", true);
-        jumpAction = playerInput.actions.FindAction("Player/Jump", true);
-        attackAction = playerInput.actions.FindAction("Player/Attack", true);
-    }
-
+    
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
@@ -40,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         myFeetCollider = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidbody.gravityScale;
 
+        PlayerInput playerInput = GetComponent<PlayerInput>();
         if (Keyboard.current != null && Mouse.current != null)
         {
             playerInput.SwitchCurrentControlScheme(
@@ -47,24 +38,6 @@ public class PlayerMovement : MonoBehaviour
                 Keyboard.current,
                 Mouse.current);
         }
-    }
-
-    void OnEnable()
-    {
-        if (moveAction == null) { return; }
-        moveAction.performed += OnMove;
-        moveAction.canceled += OnMove;
-        jumpAction.performed += OnJump;
-        attackAction.performed += OnAttack;
-    }
-
-    void OnDisable()
-    {
-        if (moveAction == null) { return; }
-        moveAction.performed -= OnMove;
-        moveAction.canceled -= OnMove;
-        jumpAction.performed -= OnJump;
-        attackAction.performed -= OnAttack;
     }
 
     // Update is called once per frame
@@ -77,17 +50,21 @@ public class PlayerMovement : MonoBehaviour
         Die();
     }
 
-    void OnMove(InputAction.CallbackContext context)
+    void OnMove(InputValue value)
     {
         if(!isAlive){ return; }
-        moveInput = context.ReadValue<Vector2>();
+        moveInput = value.Get<Vector2>();
+        
+        
     }
-
-    void OnJump(InputAction.CallbackContext context)
+    void OnJump(InputValue value)
     {
         if(!isAlive){ return; }
         if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){return;}
-        myRigidbody.linearVelocity += new Vector2(0f, jumpSpeed);
+        if (value.isPressed) 
+        {
+            myRigidbody.linearVelocity += new Vector2(0f, jumpSpeed);
+        }
     }
     void Run()
     {
@@ -120,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    void OnAttack(InputAction.CallbackContext context)
+    void OnAttack(InputValue value)
     {
         if(!isAlive) { return; }
         Instantiate(bullet,gun.position, transform.rotation);
@@ -132,7 +109,13 @@ public class PlayerMovement : MonoBehaviour
             isAlive = false;
             myAnimator.SetTrigger("Dying");
             myRigidbody.linearVelocity = deathKick;
-            FindAnyObjectByType<GameSession>().ProcessPlayerDeath();
+            StartCoroutine(ProcessDeathAfterDelay());
         }
+    }
+
+    IEnumerator ProcessDeathAfterDelay()
+    {
+        yield return new WaitForSeconds(deathDelay);
+        FindAnyObjectByType<GameSession>().ProcessPlayerDeath();
     }
 }
