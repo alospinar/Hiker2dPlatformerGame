@@ -64,6 +64,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3754740724855056906, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
+      propertyPath: m_Size.x
+      value: 0.25450906
+      objectReference: {fileID: 0}
+    - target: {fileID: 3754740724855056906, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.08398996
+      objectReference: {fileID: 0}
+    - target: {fileID: 3989839216904406443, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
+      propertyPath: m_Size.x
+      value: 0.007893562
+      objectReference: {fileID: 0}
+    - target: {fileID: 3989839216904406443, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
+      propertyPath: m_Size.y
+      value: 0.2714305
+      objectReference: {fileID: 0}
+    - target: {fileID: 3989839216904406443, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.32925892
+      objectReference: {fileID: 0}
+    - target: {fileID: 3989839216904406443, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.42960954
+      objectReference: {fileID: 0}
     - target: {fileID: 6432612253491532210, guid: a95c4470db37044b9a167cb5e4f668ff, type: 3}
       propertyPath: m_Name
       value: VioletGoober (Enemy)  Variant

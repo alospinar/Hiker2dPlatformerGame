@@ -21,8 +21,9 @@ public class EnemyMovement : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D Collision) 
     {
-        moveSpeed = -moveSpeed;
         FlipEnemyFacing();
+        moveSpeed = -moveSpeed;
+        
     }
 
     void FlipEnemyFacing()
