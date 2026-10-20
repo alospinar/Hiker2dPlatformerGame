@@ -15,11 +15,23 @@ public class PlayerMovement : MonoBehaviour
     Animator myAnimator;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
+    PlayerInput playerInput;
+    InputAction moveAction;
+    InputAction jumpAction;
+    InputAction attackAction;
 
     bool isAlive = true; 
     
     float gravityScaleAtStart;
-    
+
+    void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        moveAction = playerInput.actions.FindAction("Player/Move", true);
+        jumpAction = playerInput.actions.FindAction("Player/Jump", true);
+        attackAction = playerInput.actions.FindAction("Player/Attack", true);
+    }
+
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
@@ -27,7 +39,32 @@ public class PlayerMovement : MonoBehaviour
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidbody.gravityScale;
-        
+
+        if (Keyboard.current != null && Mouse.current != null)
+        {
+            playerInput.SwitchCurrentControlScheme(
+                "Keyboard&Mouse",
+                Keyboard.current,
+                Mouse.current);
+        }
+    }
+
+    void OnEnable()
+    {
+        if (moveAction == null) { return; }
+        moveAction.performed += OnMove;
+        moveAction.canceled += OnMove;
+        jumpAction.performed += OnJump;
+        attackAction.performed += OnAttack;
+    }
+
+    void OnDisable()
+    {
+        if (moveAction == null) { return; }
+        moveAction.performed -= OnMove;
+        moveAction.canceled -= OnMove;
+        jumpAction.performed -= OnJump;
+        attackAction.performed -= OnAttack;
     }
 
     // Update is called once per frame
@@ -40,21 +77,17 @@ public class PlayerMovement : MonoBehaviour
         Die();
     }
 
-    void OnMove(InputValue value)
+    void OnMove(InputAction.CallbackContext context)
     {
         if(!isAlive){ return; }
-        moveInput = value.Get<Vector2>();
-        
-        
+        moveInput = context.ReadValue<Vector2>();
     }
-    void OnJump(InputValue value)
+
+    void OnJump(InputAction.CallbackContext context)
     {
         if(!isAlive){ return; }
         if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){return;}
-        if (value.isPressed) 
-        {
-            myRigidbody.linearVelocity += new Vector2(0f, jumpSpeed);
-        }
+        myRigidbody.linearVelocity += new Vector2(0f, jumpSpeed);
     }
     void Run()
     {
@@ -87,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    void OnAttack(InputValue value)
+    void OnAttack(InputAction.CallbackContext context)
     {
         if(!isAlive) { return; }
         Instantiate(bullet,gun.position, transform.rotation);
